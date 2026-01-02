@@ -1,30 +1,39 @@
 <script>
 async function send() {
-  let input = document.getElementById("userInput");
-  let msg = input.value.trim();
-  if (msg === "") return;
+  const input = document.getElementById("userInput");
+  const chat = document.getElementById("chatBox");
+  const msg = input.value.trim();
+  if (!msg) return;
 
-  let chat = document.getElementById("chatBox");
   chat.innerHTML += `<div class="user">🧑 You: ${msg}</div>`;
-  chat.innerHTML += `<div class="bot">🤖 Bot: Thinking...</div>`;
+  const botDiv = document.createElement("div");
+  botDiv.className = "bot";
+  botDiv.innerText = "🤖 Bot: Thinking...";
+  chat.appendChild(botDiv);
+
   chat.scrollTop = chat.scrollHeight;
   input.value = "";
 
   try {
-    let res = await fetch("https://chatbot-backend.ankandeb2009.workers.dev", {
+    const res = await fetch("https://chatbot-backend.ankandeb2009.workers.dev", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: msg })
     });
 
-    let data = await res.json();
-    let reply = data.choices[0].message.content;
+    const data = await res.json();
 
-    chat.lastChild.innerHTML = `🤖 Bot: ${reply}`;
-    chat.scrollTop = chat.scrollHeight;
+    if (data && data.choices && data.choices[0]) {
+      botDiv.innerText =
+        "🤖 Bot: " + data.choices[0].message.content;
+    } else {
+      botDiv.innerText = "🤖 Bot: No response";
+    }
 
-  } catch (e) {
-    chat.lastChild.innerHTML = "❌ Bot: Server error";
+  } catch (err) {
+    botDiv.innerText = "❌ Bot: Connection error";
   }
+
+  chat.scrollTop = chat.scrollHeight;
 }
 </script>
