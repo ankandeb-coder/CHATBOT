@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GK Chatbot</title>
+<meta charset="UTF-8">
+<title>Public GK Chatbot</title>
+<style>
+body {
+  font-family: Arial;
+  background: #0f0f0f;
+  color: #00ff88;
+  padding: 20px;
+}
+#chat {
+  max-width: 600px;
+  margin: auto;
+}
+input, button {
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+button {
+  background: #00ff88;
+  border: none;
+  cursor: pointer;
+}
+pre {
+  background: #000;
+  padding: 10px;
+  margin-top: 10px;
+  white-space: pre-wrap;
+}
+</style>
 </head>
+
 <body>
-  <h1>GK Chatbot is LIVE 🔥</h1>
-  <p>If you see this, GitHub Pages is working.</p>
+<div id="chat">
+  <h2>🧠 GK Chatbot</h2>
+  <input id="q" placeholder="Ask any GK question">
+  <button onclick="ask()">Ask</button>
+  <pre id="a">Ready.</pre>
+</div>
+
+<script>
+async function ask() {
+  document.getElementById("a").innerText =
+    "⚠ Backend not connected yet";
+}
+</script>
+
 </body>
 </html>
-
