@@ -1,52 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Public Chatbot</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .chatbox {
-      background: #fff;
-      width: 360px;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    #messages {
-      height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    input {
-      width: 75%;
-      padding: 8px;
-    }
-    button {
-      width: 20%;
-      padding: 8px;
-    }
-    .user { color: #000; }
-    .bot { color: #0a7cff; }
-  </style>
-</head>
-<body>
-
-<div class="chatbox">
-  <h2>💬 CHATBOT</h2>
-  <div id="messages"></div>
-  <input id="input" placeholder="Type message..." />
-  <button onclick="send()">Send</button>
-</div>
-
 <script>
 const backendURL = "https://chatbot-backend.ankandeb2009.workers.dev/";
 
@@ -61,21 +12,17 @@ async function send() {
   try {
     const res = await fetch(backendURL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: msg })
     });
 
-    const data = await res.json();
+    const text = await res.text();   // 🔥 RAW TEXT
+    console.log("RAW RESPONSE:", text);
 
-    const reply =
-      data.choices?.[0]?.message?.content || "❌ No response";
-
-    addMsg("🤖 " + reply, "bot");
+    addMsg("🤖 RAW: " + text, "bot");
 
   } catch (e) {
-    addMsg("❌ Server error", "bot");
+    addMsg("❌ FETCH ERROR", "bot");
   }
 }
 
@@ -87,5 +34,3 @@ function addMsg(text, cls) {
 }
 </script>
 
-</body>
-</html>
