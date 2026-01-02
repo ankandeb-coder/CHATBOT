@@ -1,118 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Public Chatbot</title>
-
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  background: #0b0b0b;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #ffffff;
-}
-
-#container {
-  max-width: 600px;
-  margin: 40px auto;
-  background: #121212;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 20px #00ff8844;
-}
-
-h2 {
-  text-align: center;
-  color: #00ff88;
-  margin-bottom: 20px;
-}
-
-#chatBox {
-  background: #000;
-  padding: 15px;
-  height: 300px;
-  overflow-y: auto;
-  border-radius: 6px;
-  font-size: 15px;
-}
-
-.user {
-  color: #00aaff;
-  margin-bottom: 10px;
-}
-
-.bot {
-  color: #00ff88;
-  margin-bottom: 10px;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 16px;
-}
-
-button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  font-size: 16px;
-  background: #00ff88;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  background: #00dd77;
-}
-
-.footer {
-  text-align: center;
-  font-size: 12px;
-  opacity: 0.5;
-  margin-top: 10px;
-}
-</style>
-</head>
-
-<body>
-
-<div id="container">
-  <h2>💬 CHATBOT</h2>
-
-  <div id="chatBox">
-    <div class="bot">🤖 Bot: Hello! Ask me anything.</div>
-  </div>
-
-  <input id="userInput" placeholder="Type your message..." />
-  <button onclick="send()">Send</button>
-
-  <div class="footer">
-    Public Chatbot • Backend not connected yet
-  </div>
-</div>
-
 <script>
-function send() {
+async function send() {
   let input = document.getElementById("userInput");
   let msg = input.value.trim();
   if (msg === "") return;
 
   let chat = document.getElementById("chatBox");
-
   chat.innerHTML += `<div class="user">🧑 You: ${msg}</div>`;
-  chat.innerHTML += `<div class="bot">🤖 Bot: (Backend coming soon)</div>`;
-
+  chat.innerHTML += `<div class="bot">🤖 Bot: Thinking...</div>`;
   chat.scrollTop = chat.scrollHeight;
   input.value = "";
+
+  try {
+    let res = await fetch("https://chatbot-backend.ankandeb2009.workers.dev", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+
+    let data = await res.json();
+    let reply = data.choices[0].message.content;
+
+    chat.lastChild.innerHTML = `🤖 Bot: ${reply}`;
+    chat.scrollTop = chat.scrollHeight;
+
+  } catch (e) {
+    chat.lastChild.innerHTML = "❌ Bot: Server error";
+  }
 }
 </script>
-
-</body>
-</html>
